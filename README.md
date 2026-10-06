@@ -653,27 +653,7 @@ terraform plan
 
 Do not run `terraform apply` until the provider, account, region, state backend, and variables have been reviewed.
 
-## Current implementation status
 
-| Area | Status | Current state |
-|---|---|---|
-| Repository documentation | Partial | This README documents the current architecture and operation. |
-| Kafka producer | Implemented | CSV rows are replayed to the `transactions` topic. |
-| Kafka local environment | Implemented for development | Docker Compose provides a single-node KRaft Kafka broker. |
-| Spark streaming | Implemented foundation | Kafka parsing, 10-second aggregation, and PostgreSQL `foreachBatch` writing are present. |
-| PostgreSQL schema | Implemented | `transactions` and `predictions` tables plus indexes are defined. |
-| Database initialization script | Not implemented | `database/init_db.py` is currently empty; Compose relies on `schema.sql`. |
-| Model training | Implemented | Random Forest training and MLflow logging are present. |
-| Model registry helper | Not implemented | `training/mlflow_registry.py` is currently empty. |
-| FastAPI serving | Implemented foundation | Startup model loading, prediction, history, health, metrics, and WebSocket routes are present. |
-| React dashboard | In progress | Vite/React project configuration exists; verify that all UI components and API wiring are complete. |
-| Docker images | Partial | Backend and frontend Dockerfiles exist; Compose does not yet run those services. |
-| Kubernetes | Partial | Backend, frontend, database, and ConfigMap manifests exist; deployment values need environment verification. |
-| Terraform | Partial | Terraform files exist; validate provider and resource behavior before applying. |
-| Ansible | Partial | Inventory, playbook, template, and role directory exist; complete and test the Kafka role. |
-| Monitoring | Partial | Backend Prometheus metrics exist; Prometheus/Grafana deployment and alerting manifests are not present in the current root listing. |
-| CI/CD | Not present in current root listing | GitHub Actions workflow automation still needs to be added. |
-| Drift detection | Not implemented | Evidently-based drift detection is documented as a future/stretch feature. |
 
 ## Known limitations and next steps
 
