@@ -1,0 +1,4 @@
+---
+- name: Restart kafka container
+  ansible.builtin.command: docker restart kafka
+  changed_when: true

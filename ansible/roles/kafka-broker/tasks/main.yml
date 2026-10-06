@@ -1,0 +1,22 @@
+---
+- name: Install ops tooling for working with the Kafka broker
+  ansible.builtin.apt:
+    name:
+      - jq
+      - curl
+      - net-tools
+    state: present
+    update_cache: true
+
+- name: Ensure config directory exists
+  ansible.builtin.file:
+    path: /etc/fraud-kafka
+    state: directory
+    mode: "0755"
+
+- name: Deploy Kafka retention config
+  ansible.builtin.template:
+    src: kafka-retention.conf.j2
+    dest: /etc/fraud-kafka/retention.conf
+    mode: "0644"
+  notify: Restart kafka container

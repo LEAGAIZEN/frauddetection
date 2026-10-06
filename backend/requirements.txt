@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+mlflow
+scikit-learn
+pandas
+sqlalchemy
+psycopg2-binary
+python-dotenv
+prometheus-client

@@ -1,0 +1,6 @@
+---
+- name: Configure Kafka broker host
+  hosts: kafka_broker
+  become: true
+  roles:
+    - kafka-broker
