@@ -1,0 +1,43 @@
+name: Build and Deploy Fraud Detection
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: docker build -t fraud-backend:latest ./backend
+
+      - name: Build frontend image
+        run: docker build -t fraud-frontend:latest ./frontend
+
+      - name: Load backend image into kind
+        run: kind load docker-image fraud-backend:latest --name fraud-cluster
+
+      - name: Load frontend image into kind
+        run: kind load docker-image fraud-frontend:latest --name fraud-cluster
+
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/configmap.yaml
+          kubectl apply -f k8s/database-statefulset.yaml
+          kubectl apply -f k8s/backend-deployment.yaml
+          kubectl apply -f k8s/frontend-deployment.yaml
+
+      # Reusing the :latest tag means kubectl apply alone reports
+      # "unchanged" and won't pick up the freshly rebuilt image --
+      # the exact gotcha from Phase 8. A rollout restart forces every
+      # pod to be recreated, which re-pulls (loads) the image fresh.
+      - name: Force pods to pick up the new images
+        run: |
+          kubectl rollout restart deployment/backend
+          kubectl rollout restart deployment/frontend
+          kubectl rollout status deployment/backend --timeout=120s
+          kubectl rollout status deployment/frontend --timeout=120s
