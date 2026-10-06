@@ -458,24 +458,20 @@ Every successful prediction is broadcast to connected clients as JSON.
 
 ## Configuration
 
-Create a `.env` file in the repository root. The exact values depend on where each service runs. A local example is:
+Create a `.env` file in the repository root and add the environment variables required by Kafka, PostgreSQL, and MLflow. Use values appropriate for your local or deployment environment. Keep all credentials private and do not commit them to the repository.
+
+Example variable names only:
 
 ```dotenv
-KAFKA_BROKER=localhost:9092
-KAFKA_TOPIC=transactions
-
-POSTGRES_HOST=localhost
-POSTGRES_PORT=55432
-POSTGRES_DB=frauddb
-POSTGRES_USER=fraud
-POSTGRES_PASSWORD=fraud
-
-MLFLOW_TRACKING_URI=sqlite:///mlflow.db
-MODEL_NAME=fraud-model
-
-# Optional: load a specific local MLflow model instead of the registry's latest version
-# MODEL_PATH=models:/fraud-model/1
-# MODEL_VERSION=1
+KAFKA_BROKER=...
+KAFKA_TOPIC=...
+POSTGRES_HOST=...
+POSTGRES_PORT=...
+POSTGRES_DB=...
+POSTGRES_USER=...
+POSTGRES_PASSWORD=...
+MLFLOW_TRACKING_URI=...
+MODEL_NAME=...
 ```
 
 Do not commit real passwords, cloud credentials, API keys, or production connection strings. Add `.env` to `.gitignore`.
@@ -682,7 +678,7 @@ Do not run `terraform apply` until the provider, account, region, state backend,
 ## Known limitations and next steps
 
 1. Add a reproducible root-level dependency strategy and pin compatible versions.
-2. Add automated tests for producer serialization, API validation, prediction persistence, and WebSocket broadcasting.
+2. Add automated tests for producer serialization, API validation, database operations, and model prediction flow.
 3. Add a proper database initialization/migration workflow.
 4. Complete MLflow model promotion and champion/challenger handling.
 5. Add model validation gates before registering a model.
