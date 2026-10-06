@@ -2,11 +2,20 @@
 
 An end-to-end machine-learning and MLOps project for streaming credit-card transactions, scoring fraud risk, storing results, and exposing the results through an API and live dashboard.
 
-> **Project status — October 6, 2026:** The repository contains a working foundation for the ingestion, streaming, model-training, API, database, container, Kubernetes, Terraform, and Ansible layers. The core backend, producer, Spark streaming job, database schema, and training workflow are implemented. Some surrounding production features are still incomplete or require additional configuration, including frontend screens, model-registry automation, database initialization code, Ansible roles, CI/CD, and monitoring manifests.
+> **Project status — October 6, 2026:** The repository contains a working foundation for the ingestion, streaming, model-training, API, database, container, Kubernetes, Terraform, and Ansible layers. The core backend, producer, Spark streaming job, database schema, training workflow, and a baseline CI/CD workflow are implemented. Some surrounding production features are still incomplete or require additional configuration, including frontend screens, model-registry automation, database initialization code, Ansible roles, and monitoring manifests.
+
+## Recent updates (October 6, 2026)
+
+- A GitHub Actions CI/CD workflow is now included in the repository for container build and Kubernetes deployment steps.
+- A backend model export helper is included so backend image builds can package exported model artifacts for CI image builds.
+- The frontend Docker build context now excludes `node_modules` via `frontend/.dockerignore`.
+- Recent workflow/process updates build backend and frontend images with `docker build --no-cache` to improve build reproducibility and reduce stale-cache issues.
+- This README was expanded into complete project documentation, and configuration guidance was made generic so real environment variable values are not embedded.
 
 ## Contents
 
 - [What this project does](#what-this-project-does)
+- [Recent updates (October 6, 2026)](#recent-updates-october-6-2026)
 - [Architecture](#architecture)
 - [End-to-end data flow](#end-to-end-data-flow)
 - [Repository structure](#repository-structure)
@@ -657,7 +666,7 @@ Do not run `terraform apply` until the provider, account, region, state backend,
 
 | Area | Status | Current state |
 |---|---|---|
-| Repository documentation | Partial | This README documents the current architecture and operation. |
+| Repository documentation | Implemented | README coverage was expanded into complete architecture, setup, and configuration guidance with generic (non-secret) examples. |
 | Kafka producer | Implemented | CSV rows are replayed to the `transactions` topic. |
 | Kafka local environment | Implemented for development | Docker Compose provides a single-node KRaft Kafka broker. |
 | Spark streaming | Implemented foundation | Kafka parsing, 10-second aggregation, and PostgreSQL `foreachBatch` writing are present. |
@@ -667,12 +676,12 @@ Do not run `terraform apply` until the provider, account, region, state backend,
 | Model registry helper | Not implemented | `training/mlflow_registry.py` is currently empty. |
 | FastAPI serving | Implemented foundation | Startup model loading, prediction, history, health, metrics, and WebSocket routes are present. |
 | React dashboard | In progress | Vite/React project configuration exists; verify that all UI components and API wiring are complete. |
-| Docker images | Partial | Backend and frontend Dockerfiles exist; Compose does not yet run those services. |
+| Docker images | Partial | Backend and frontend Dockerfiles exist; backend includes model export packaging support and frontend build context exclusions (`.dockerignore`), while Compose still does not run those services. |
 | Kubernetes | Partial | Backend, frontend, database, and ConfigMap manifests exist; deployment values need environment verification. |
 | Terraform | Partial | Terraform files exist; validate provider and resource behavior before applying. |
 | Ansible | Partial | Inventory, playbook, template, and role directory exist; complete and test the Kafka role. |
 | Monitoring | Partial | Backend Prometheus metrics exist; Prometheus/Grafana deployment and alerting manifests are not present in the current root listing. |
-| CI/CD | Not present in current root listing | GitHub Actions workflow automation still needs to be added. |
+| CI/CD | Implemented foundation | A GitHub Actions workflow is present and performs backend/frontend image builds and Kubernetes apply/restart steps; test/security/release coverage can be expanded further. |
 | Drift detection | Not implemented | Evidently-based drift detection is documented as a future/stretch feature. |
 
 ## Known limitations and next steps
@@ -687,7 +696,7 @@ Do not run `terraform apply` until the provider, account, region, state backend,
 8. Move all secrets to environment management, Docker secrets, or Kubernetes Secrets.
 9. Complete and verify the React dashboard screens and API configuration.
 10. Add Docker Compose services for MLflow, Spark, backend, frontend, and monitoring where practical.
-11. Add CI/CD workflows for tests, image builds, vulnerability scanning, and deployment.
+11. Expand the existing CI/CD workflow with automated test suites, vulnerability scanning, and release/deployment gating.
 12. Add Prometheus scraping configuration and Grafana dashboards.
 13. Choose and document a production fraud threshold based on business requirements.
 14. Evaluate the model with time-aware validation and fraud-specific metrics such as PR AUC, recall at a fixed false-positive rate, and cost-weighted loss.
