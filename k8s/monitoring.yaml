@@ -1,0 +1,33 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: backend-metrics
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 10s
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: fraud-alerts
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: fraud-detection
+      rules:
+        - alert: HighFraudRate
+          expr: rate(fraud_flagged_total[5m]) / rate(predictions_total[5m]) > 0.3
+          for: 30s
+          labels:
+            severity: warning
+          annotations:
+            summary: "Fraud flag rate above 30% over the last 5 minutes"

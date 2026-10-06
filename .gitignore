@@ -13,8 +13,8 @@ terraform/*.tfstate.backup
 terraform/*.tfvars
 .terraform.lock.hcl
 
-# ML artifacts
-backend/model_export/
+# # ML artifacts
+# backend/model_export/
 
 # Python
 venv/
